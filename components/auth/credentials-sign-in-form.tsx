@@ -5,46 +5,36 @@ import { Button } from "@/components/ui/button";
 import { signUpDeafaultValues } from "@/lib/constants";
 import { authClient } from "@/lib/auth-client";
 
-export default function CredentialsSignUpForm() {
+export default function CredentialsSignInForm() {
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
     evt.preventDefault();
     const formData = new FormData(evt.currentTarget);
 
-    const name = String(formData.get("name"));
     const email = String(formData.get("email"));
     const password = String(formData.get("password"));
 
-    if (!name || !email || !password) return;
+    if (!email || !password) return;
 
-    await authClient.signUp.email({
-      name,
-      email,
-      password,
-      callbackURL: "/", // redirect URL
-    }, {
-      onSuccess: () => {
-        console.log("Registro correcto!");
+    await authClient.signIn.email(
+      {
+        email,
+        password,
+        callbackURL: "/", // redirect URL
       },
-      onError: (ctx) => {
-        alert(ctx.error.message);
-      }
-    });
+      {
+        onSuccess: () => {
+          console.log("Login correcto!");
+        },
+        onError: (ctx) => {
+          alert(ctx.error.message);
+        },
+      },
+    );
   }
 
   return (
     <div className="flex flex-col items-center justify-center p-6 bg-white rounded-lg max-w-md mx-auto">
       <form onSubmit={handleSubmit} className="w-full space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
-          <Input
-            id="name"
-            name="name"
-            placeholder="ico"
-            defaultValue={signUpDeafaultValues.name}
-            required
-          />
-        </div>
-
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
@@ -68,8 +58,11 @@ export default function CredentialsSignUpForm() {
           />
         </div>
 
-        <Button type="submit" className="w-full bg-[#1e293b] hover:bg-[#0f172a] text-white py-6 mt-4">
-          Sign Up
+        <Button
+          type="submit"
+          className="w-full bg-[#1e293b] hover:bg-[#0f172a] text-white py-6 mt-4"
+        >
+          Sign In
         </Button>
       </form>
     </div>

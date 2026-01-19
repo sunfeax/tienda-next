@@ -14,17 +14,15 @@ export default function SignUpPage() {
     <div className="w-full max-w-md mx-auto">
       <Card>
         <CardHeader>
-          <Link href="/" className="flex justify-center">
+          <Link href="/" className="flex justify-center mt-10">
             <Image
-              src="/images/logo.svg"
+              src="/logo.svg"
               alt={`${APP_NAME} logo`}
               width={50}
               height={50}
               priority
             />
           </Link>
-
-          <div className="text-center mt-2">Vlad</div>
 
           <CardTitle className="text-center">Sign up</CardTitle>
           <CardDescription className="text-center">

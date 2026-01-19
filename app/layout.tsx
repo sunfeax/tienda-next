@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { APP_BASEURL, APP_DESC, APP_NAME } from "@/lib/constants";
+import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from "@/lib/constants";
 import { ThemeProvider } from "next-themes";
 
 const interFont = Inter({
@@ -11,8 +11,8 @@ const interFont = Inter({
 
 export const metadata: Metadata = {
   title: APP_NAME,
-  description: APP_DESC,
-  metadataBase: new URL(APP_BASEURL)
+  description: APP_DESCRIPTION,
+  metadataBase: new URL(SERVER_URL),
 };
 
 export default function MainLayout({

@@ -6,7 +6,7 @@ export const SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || "https://localhost:3000";
 
 export const signUpDeafaultValues = {
-  name: "ico",
-  email: "ico@ico.com",
-  password: "123456",
+  name: "vlad",
+  email: "vlad@vlad.com",
+  password: "",
 };
