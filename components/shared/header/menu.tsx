@@ -17,7 +17,7 @@ const MenuHeader = () => {
                     </Link>
                 </Button>
                 <Button asChild variant={'ghost'}>
-                    <Link href={'/login'}>
+                    <Link href={'/sign-in'}>
                         <UserIcon />Login
                     </Link>
                 </Button>

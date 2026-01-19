@@ -3,13 +3,12 @@
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
+import SignOutButton from "@/components/auth/signout-button";
 
 export default function ProfilePage() {
   const {
     data: session,
     isPending,
-    error,
-    refetch,
   } = authClient.useSession();
 
   if (isPending) return <div className="p-8">Loading...</div>;
@@ -35,12 +34,7 @@ export default function ProfilePage() {
         <p><strong>Name:</strong> {session.user.name}</p>
         <p><strong>Email:</strong> {session.user.email}</p>
       </div>
-      <Button
-        onClick={async () => await authClient.signOut()}
-        className="mt-4"
-      >
-        Sign Out
-      </Button>
+      <SignOutButton>Sign out</SignOutButton>
     </div>
   );
 }

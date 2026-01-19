@@ -1,9 +1,11 @@
 'use client';
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signUpDeafaultValues } from "@/lib/constants";
 import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
 
 export default function CredentialsSignInForm() {
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
@@ -19,7 +21,7 @@ export default function CredentialsSignInForm() {
       {
         email,
         password,
-        callbackURL: "/", // redirect URL
+        callbackURL: "/profile", // redirect URL
       },
       {
         onSuccess: () => {
@@ -58,11 +60,18 @@ export default function CredentialsSignInForm() {
           />
         </div>
 
+        <div className="text-center text-sm text-slate-600">
+          Don't have any account?{" "}
+          <Link href="/sign-up" className="text-slate-900 underline">
+            Sign up
+          </Link>
+        </div>
+
         <Button
           type="submit"
           className="w-full bg-[#1e293b] hover:bg-[#0f172a] text-white py-6 mt-4"
         >
-          Sign In
+          Sign in
         </Button>
       </form>
     </div>
