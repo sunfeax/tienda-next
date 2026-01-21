@@ -14,7 +14,7 @@ export default function SignInPage() {
     <div className="w-full max-w-md mx-auto">
       <Card>
         <CardHeader>
-          <Link href="/" className="flex justify-center mt-10">
+          <Link href="/" className="flex justify-center mt-5">
             <Image
               src="/logo.svg"
               alt={`${APP_NAME} logo`}

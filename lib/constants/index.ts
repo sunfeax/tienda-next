@@ -1,4 +1,4 @@
-export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Tienda Next 2025";
+export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Tienda Next";
 export const APP_DESCRIPTION =
   process.env.NEXT_PUBLIC_APP_DESCRIPTION ||
   "Este es el proyecto Next de práctica en DAW";
@@ -8,5 +8,5 @@ export const SERVER_URL =
 export const signUpDeafaultValues = {
   name: "vlad",
   email: "vlad@vlad.com",
-  password: "",
+  password: "12345",
 };

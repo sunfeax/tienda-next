@@ -5,7 +5,7 @@ export default async function HomePage() {
   const data = await getLatestProducts();
   return (
     <div className="wrapper">
-      <ProductList data={data} title='Mi lista' limit={4}/>
+      <ProductList data={data} title='Nuestros productos' limit={8}/>
     </div>
   );
 };

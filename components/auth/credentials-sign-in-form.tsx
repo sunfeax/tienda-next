@@ -61,15 +61,15 @@ export default function CredentialsSignInForm() {
         </div>
 
         <div className="text-center text-sm text-slate-600">
-          Don't have any account?{" "}
-          <Link href="/sign-up" className="text-slate-900 underline">
+          Don't have an account?
+          <Link href="/sign-up" className="text-slate-900 underline ml-2">
             Sign up
           </Link>
         </div>
 
         <Button
           type="submit"
-          className="w-full bg-[#1e293b] hover:bg-[#0f172a] text-white py-6 mt-4"
+          className="mx-auto block bg-[#1e293b] hover:bg-[#0f172a] text-white px-7"
         >
           Sign in
         </Button>
