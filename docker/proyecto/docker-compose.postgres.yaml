@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:18
-    container_name: pepito
+    container_name: tienda_next
     restart: always
     environment:
       POSTGRES_DB: tienda_next
