@@ -1,4 +1,5 @@
 'use client';
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -6,28 +7,41 @@ import { signUpDeafaultValues } from "@/lib/constants";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { Checkbox } from "../ui/checkbox";
-
-const appName = process.env.NEXT_PUBLIC_APP_NAME || "Tienda Next";
+import { useRouter } from "next/navigation";
 
 export default function CredentialsSignUpForm() {
+  
+  const appName = process.env.NEXT_PUBLIC_APP_NAME || "Tienda Next";
+  const router = useRouter();
+
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
+
     evt.preventDefault();
+
     const formData = new FormData(evt.currentTarget);
 
     const name = String(formData.get("name"));
     const email = String(formData.get("email"));
     const password = String(formData.get("password"));
+    const confirmedPassword = String(formData.get("password-confirmed"));
+    const phone = String(formData.get("phone"));
 
     if (!name || !email || !password) return;
+
+    if (password != confirmedPassword) {
+      alert("Error: the passwords don't match.");
+      return;
+    }
 
     await authClient.signUp.email({
       name,
       email,
       password,
-      callbackURL: "/", // redirect URL
+      phone,
     }, {
       onSuccess: () => {
         console.log("Registro correcto!");
+        router.push("/sign-in");
       },
       onError: (ctx) => {
         alert(ctx.error.message);
@@ -43,7 +57,6 @@ export default function CredentialsSignUpForm() {
           <Input
             id="name"
             name="name"
-            placeholder="Juan"
             defaultValue={signUpDeafaultValues.name}
             required
           />
@@ -73,11 +86,11 @@ export default function CredentialsSignUpForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password">Confirm password</Label>
+          <Label htmlFor="password-confirmed">Confirm password</Label>
           <Input
             id="password-confirmed"
             name="password-confirmed"
-            type="password-confirmed"
+            type="password"
             placeholder="********"
             required
           />

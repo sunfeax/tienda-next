@@ -6,10 +6,16 @@ import { Button } from "@/components/ui/button";
 import { signUpDeafaultValues } from "@/lib/constants";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CredentialsSignInForm() {
+
+  const router = useRouter();
+  
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
+
     evt.preventDefault();
+    
     const formData = new FormData(evt.currentTarget);
 
     const email = String(formData.get("email"));
@@ -21,11 +27,11 @@ export default function CredentialsSignInForm() {
       {
         email,
         password,
-        callbackURL: "/profile", // redirect URL
       },
       {
         onSuccess: () => {
           console.log("Login correcto!");
+          router.push("/profile");
         },
         onError: (ctx) => {
           alert(ctx.error.message);
