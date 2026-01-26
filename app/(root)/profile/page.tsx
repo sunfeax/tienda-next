@@ -18,7 +18,7 @@ export default function ProfilePage() {
     return (
       <div className="p-8 space-x-4">
         <h1 className="mb-4 text-2xl font-bold">You are not authorized</h1>
-        <Button asChild variant="destructive">
+        <Button asChild variant="default">
           <Link href="/sign-in">Sign In</Link>
         </Button>
         <Button asChild variant="default">

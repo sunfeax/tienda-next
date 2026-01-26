@@ -10,7 +10,7 @@ import { Checkbox } from "../ui/checkbox";
 import { useRouter } from "next/navigation";
 
 export default function CredentialsSignUpForm() {
-  
+
   const appName = process.env.NEXT_PUBLIC_APP_NAME || "Tienda Next";
   const router = useRouter();
 
@@ -107,9 +107,10 @@ export default function CredentialsSignUpForm() {
         </div>
 
         <div className="flex items-center justify-center gap-2">
-          <Checkbox 
-            id="terms" 
-            className="h-5 w-5 border-2 border-slate-400 data-[state=checked]:border-primary" 
+          <Checkbox
+            id="terms"
+            className="h-5 w-5 border-2 border-slate-400 data-[state=checked]:border-primary"
+            required
           />
           <p className="text-sm">I agree to the { }
             <Link href="/terms" className="underline underline-offset-2 hover:text-blue-950">terms and conditions</Link>
@@ -118,7 +119,7 @@ export default function CredentialsSignUpForm() {
         </div>
 
         <div className="text-center text-sm text-slate-600">
-          Already have an account? 
+          Already have an account?
           <Link href="/sign-in" className="text-slate-900 underline ml-2">
             Sign in
           </Link>

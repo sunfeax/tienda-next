@@ -1,4 +1,6 @@
-import { z } from 'zod';
+import { email, z } from 'zod';
+
+const emptyStringToNull = (val: string) => (val === '' ? null : val);
 
 export const insertProductSchema = z.object({
   name: z
@@ -62,3 +64,31 @@ export const insertProductSchema = z.object({
     .optional()
     .default(null),
 });
+
+export const signUpSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(3, 'Name must be at least 3 chars')
+    .max(100),
+
+  password: z
+    .string()
+    .min(8, "Min 8 chars"),
+
+  confirmPassword: z.string(),
+
+  email: z
+    .email('Invalid email')
+    .trim(),
+
+  phone: z.preprocess(
+    emptyStringToNull,
+    z
+      .string()
+      .min(7)
+      .max(20)
+      .nullable()
+      .optional(),
+  ),
+})
