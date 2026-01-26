@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import ModeToggle from "./mode-toggle";
-import { EllipsisVertical, ShoppingCartIcon, UserIcon } from "lucide-react";
+import { EllipsisVertical, ShoppingCartIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import ToggleSignButton from "@/components/auth/toggle-button";
 
 const MenuHeader = () => {
     return (
@@ -16,11 +17,7 @@ const MenuHeader = () => {
                         <ShoppingCartIcon />Cart
                     </Link>
                 </Button>
-                <Button asChild variant={'ghost'}>
-                    <Link href={'/sign-in'}>
-                        <UserIcon />Login
-                    </Link>
-                </Button>
+                <ToggleSignButton></ToggleSignButton>
             </nav>
             <nav className='md:hidden'>
                 <Sheet>
@@ -28,18 +25,14 @@ const MenuHeader = () => {
                         <EllipsisVertical />
                     </SheetTrigger>
                     <SheetContent className="flex flex-col items-start p-4 max-w-xs">
-                        <SheetTitle></SheetTitle>
-                        <ModeToggle />
-                        <Button asChild variant={'ghost'}>
-                            <Link href={'/cart'}>
-                                <ShoppingCartIcon />Cart
-                            </Link>
-                        </Button>
-                        <Button asChild variant={'ghost'}>
-                            <Link href={'/login'}>
-                                <UserIcon />Login
-                            </Link>
-                        </Button>
+                      <SheetTitle></SheetTitle>
+                      <ModeToggle />
+                      <Button asChild variant={'ghost'}>
+                        <Link href={'/cart'}>
+                          <ShoppingCartIcon />Cart
+                        </Link>
+                      </Button>
+                    <ToggleSignButton></ToggleSignButton>
                     </SheetContent>
                     <SheetDescription></SheetDescription>
                 </Sheet>
