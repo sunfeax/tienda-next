@@ -8,14 +8,14 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function CredentialsSignInForm() {
+export default function CredentialsSignInForm({ callbackUrl = "/profile" } : { callbackUrl?: string }) {
 
   const router = useRouter();
-  
+
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
 
     evt.preventDefault();
-    
+
     const formData = new FormData(evt.currentTarget);
 
     const email = String(formData.get("email"));
@@ -23,15 +23,21 @@ export default function CredentialsSignInForm() {
 
     if (!email || !password) return;
 
+    const safeCallbackUrl =
+      typeof callbackUrl === "string" && callbackUrl.startsWith("/")
+        ? callbackUrl
+        : "/profile";
+
     await authClient.signIn.email(
       {
         email,
         password,
+        callbackURL: safeCallbackUrl,
       },
       {
         onSuccess: () => {
           console.log("Login correcto!");
-          router.push("/profile");
+          router.push(safeCallbackUrl);
         },
         onError: (ctx) => {
           alert(ctx.error.message);
