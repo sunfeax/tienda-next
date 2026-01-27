@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import ModeToggle from "./mode-toggle";
 import { EllipsisVertical, ShoppingCartIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import ToggleSignButton from "@/components/auth/toggle-button";
+import ProfileStateButton from "@/components/auth/profile-state";
 
 const MenuHeader = () => {
     return (
@@ -17,7 +17,7 @@ const MenuHeader = () => {
                         <ShoppingCartIcon />Cart
                     </Link>
                 </Button>
-                <ToggleSignButton></ToggleSignButton>
+                <ProfileStateButton></ProfileStateButton>
             </nav>
             <nav className='md:hidden'>
                 <Sheet>
@@ -32,7 +32,7 @@ const MenuHeader = () => {
                           <ShoppingCartIcon />Cart
                         </Link>
                       </Button>
-                    <ToggleSignButton></ToggleSignButton>
+                    <ProfileStateButton></ProfileStateButton>
                     </SheetContent>
                     <SheetDescription></SheetDescription>
                 </Sheet>

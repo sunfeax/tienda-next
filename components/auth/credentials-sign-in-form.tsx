@@ -7,9 +7,12 @@ import { signUpDeafaultValues } from "@/lib/constants";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useState } from "react";
 
 export default function CredentialsSignInForm({ callbackUrl = "/profile" } : { callbackUrl?: string }) {
 
+  const [ error, setError ] = useState<Record<string, string[]>>({});
   const router = useRouter();
 
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
@@ -21,7 +24,10 @@ export default function CredentialsSignInForm({ callbackUrl = "/profile" } : { c
     const email = String(formData.get("email"));
     const password = String(formData.get("password"));
 
-    if (!email || !password) return;
+    if (!email || !password) {
+      toast.error("Fields with email and password cannot be empty")
+      return;
+    }
 
     const safeCallbackUrl =
       typeof callbackUrl === "string" && callbackUrl.startsWith("/")
@@ -36,11 +42,11 @@ export default function CredentialsSignInForm({ callbackUrl = "/profile" } : { c
       },
       {
         onSuccess: () => {
-          console.log("Login correcto!");
+          toast.success("Sign in was successful!");
           router.push(safeCallbackUrl);
         },
         onError: (ctx) => {
-          alert(ctx.error.message);
+          toast.error(ctx.error.message);
         },
       },
     );
@@ -57,7 +63,6 @@ export default function CredentialsSignInForm({ callbackUrl = "/profile" } : { c
             type="email"
             placeholder="ico@ico.com"
             defaultValue={signUpDeafaultValues.email}
-            required
           />
         </div>
 
@@ -68,7 +73,6 @@ export default function CredentialsSignInForm({ callbackUrl = "/profile" } : { c
             name="password"
             type="password"
             placeholder="******"
-            required
           />
         </div>
 

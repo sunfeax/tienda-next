@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { UserIcon } from "lucide-react";
 
-export default function ToggleSignButton() {
+export default function ProfileStateButton() {
   const router = useRouter();
   const {
     data: session,
@@ -19,14 +19,15 @@ export default function ToggleSignButton() {
 
   if (session) {
     return (
-      <div className="flex items-center justify-center gap-2.5">
+      <div className="inline-flex items-center justify-center px-2 whitespace-nowrap rounded-md transition-all hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50">
         <Link href={"/profile"}>
-          <div className="flex">
-            <UserIcon></UserIcon>
+          <div className="flex items-center gap-2 [&_svg]:size-4">
+            <UserIcon />
             {name}
           </div>
         </Link>
         <Button
+          asChild
           onClick={async () => {
             await authClient.signOut({
               fetchOptions: {

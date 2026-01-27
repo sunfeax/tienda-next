@@ -132,9 +132,6 @@ export default function CredentialsSignUpForm() {
               </Link>{" "}
               of the {appName} store.
             </p>
-            <p className="text-sm text-red-600 min-h-5">
-              {error.terms?.[0] ?? ""}
-            </p>
           </div>
         </div>
 
