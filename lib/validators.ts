@@ -81,7 +81,7 @@ export const signUpSchema = z
 
     password: z
       .string()
-      .min(8, 'Min 8 chars')
+      .min(8, 'Password must have 8 chars')
       .regex(/[A-Z]/, 'Password must have one capital letter at least')
       .regex(/[0-9]/, 'Password must have one digit at least'),
 
@@ -103,7 +103,7 @@ export const signUpSchema = z
         .optional(),
     ),
 
-    terms: z.literal("on", { message: 'Terms and Conditions must be accepted' }),
+    terms: z.literal(true, { message: 'Terms and Conditions must be accepted' }),
   })
 
   .refine((data) => data.password === data.confirmPassword, {

@@ -1,15 +1,17 @@
 'use client';
 
+import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signUpDeafaultValues } from "@/lib/constants";
 import { authClient } from "@/lib/auth-client";
-import Link from "next/link";
 import { Checkbox } from "../ui/checkbox";
 import { useRouter } from "next/navigation";
 import { signUpSchema } from "@/lib/validators";
 import { useState } from "react";
+import { z } from "zod";
+import { toast } from "sonner";
 
 export default function CredentialsSignUpForm() {
 
@@ -35,20 +37,30 @@ export default function CredentialsSignUpForm() {
     const parsed = signUpSchema.safeParse(payload);
 
     if (!parsed.success) {
-      setError(parsed.error.flatten().fieldErrors);
+      const { fieldErrors, formErrors } = z.flattenError(parsed.error);
+      const messages = [
+        ...formErrors,
+        ...Object.values(fieldErrors).flat(),
+      ].filter(Boolean);
+
+      toast.error("", {
+        description: messages.join("\n"),
+        descriptionClassName: "whitespace-pre-line",
+      });
+
       return;
     }
 
     setError({});
     const { name, email, password, phone } = parsed.data;
 
-    await authClient.signUp.email(parsed.data, {
+    await authClient.signUp.email({name, email, password, phone}, {
       onSuccess: () => {
-        console.log("Registro correcto!");
+        toast.success("Registration was successful!");
         router.push("/sign-in");
       },
       onError: (ctx) => {
-        alert(ctx.error.message);
+        toast.error(ctx.error.message);
       }
     });
   }
@@ -62,7 +74,6 @@ export default function CredentialsSignUpForm() {
             id="name"
             name="name"
             defaultValue={signUpDeafaultValues.name}
-            required
           />
         </div>
 
@@ -74,7 +85,6 @@ export default function CredentialsSignUpForm() {
             type="email"
             placeholder="juan@example.com"
             defaultValue={signUpDeafaultValues.email}
-            required
           />
         </div>
 
@@ -85,7 +95,6 @@ export default function CredentialsSignUpForm() {
             name="password"
             type="password"
             placeholder="********"
-            required
           />
         </div>
 
@@ -96,7 +105,6 @@ export default function CredentialsSignUpForm() {
             name="confirmPassword"
             type="password"
             placeholder="********"
-            required
           />
         </div>
 
@@ -106,21 +114,28 @@ export default function CredentialsSignUpForm() {
             id="phone"
             name="phone"
             type="text"
-            placeholder="+34123456789"
+            placeholder="34 123 456 789"
           />
         </div>
 
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-start gap-2">
           <Checkbox
             id="terms"
             name="terms"
-            className="h-5 w-5 border-2 border-slate-400 data-[state=checked]:border-primary"
-            required
+            className="mt-1 h-5 w-5 border-2 border-slate-400 data-[state=checked]:border-primary"
           />
-          <p className="text-sm">I agree to the { }
-            <Link href="/terms" className="underline underline-offset-2 hover:text-blue-950">terms and conditions</Link>
-            { } of the {appName} store.
-          </p>
+          <div>
+            <p className="text-sm">
+              I agree to the{" "}
+              <Link href="/terms" className="underline underline-offset-2 hover:text-blue-950">
+                terms and conditions
+              </Link>{" "}
+              of the {appName} store.
+            </p>
+            <p className="text-sm text-red-600 min-h-5">
+              {error.terms?.[0] ?? ""}
+            </p>
+          </div>
         </div>
 
         <div className="text-center text-sm text-slate-600">
