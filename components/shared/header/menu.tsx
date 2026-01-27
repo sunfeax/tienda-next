@@ -9,15 +9,16 @@ import ProfileStateButton from "@/components/auth/profile-state";
 
 const MenuHeader = () => {
     return (
-        <div className="flex justify-center ">
-            <nav className='hidden md:flex w-full'>
-                <ModeToggle />
-                <Button asChild variant={'ghost'}>
-                    <Link href={'/cart'}>
-                        <ShoppingCartIcon />Cart
-                    </Link>
-                </Button>
-                <ProfileStateButton></ProfileStateButton>
+        <div className="flex justify-center items-center">
+            <nav className='hidden md:flex w-full items-center'>
+              <ModeToggle />
+              <Button asChild variant={'ghost'}>
+                <Link href={'/cart'}>
+                  <ShoppingCartIcon className="size-4" />
+                  Cart
+                </Link>
+              </Button>
+              <ProfileStateButton />
             </nav>
             <nav className='md:hidden'>
                 <Sheet>

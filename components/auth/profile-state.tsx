@@ -19,35 +19,35 @@ export default function ProfileStateButton() {
 
   if (session) {
     return (
-      <div className="inline-flex items-center justify-center px-2 whitespace-nowrap rounded-md transition-all hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50">
-        <Link href={"/profile"}>
-          <div className="flex items-center gap-2 [&_svg]:size-4">
-            <UserIcon />
+      <div className="inline-flex items-center gap-2">
+        <Button asChild variant="ghost">
+          <Link href="/profile">
+            <UserIcon className="size-4" />
             {name}
-          </div>
-        </Link>
+          </Link>
+        </Button>
+
         <Button
-          asChild
           onClick={async () => {
             await authClient.signOut({
               fetchOptions: {
                 onSuccess: () => router.push("/")
               }
-            })
+            });
           }}
-          variant={"outline"}
+          variant="outline"
         >
           Sign out
         </Button>
       </div>
-    )
+    );
   }
 
   return (
     <Button asChild variant={'ghost'}>
         <Link href={'/sign-in'}>
             <UserIcon />
-            Login
+            Sign in
         </Link>
     </Button>
   )
