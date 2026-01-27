@@ -1,6 +1,9 @@
-import { email, z } from 'zod';
+import { z } from 'zod';
 
-const emptyStringToNull = (val: string) => (val === '' ? null : val);
+const emptyStringToNull = (val: unknown) => {
+  if (typeof val !== 'string') return val;
+  return val.trim() === '' ? null : val;
+};
 
 export const insertProductSchema = z.object({
   name: z
@@ -28,7 +31,9 @@ export const insertProductSchema = z.object({
     .min(3, 'Description must be at least 3 chars')
     .max(500),
 
-  images: z.array(z.string()).min(1, 'At least one image is required'),
+  images: z
+    .array(z.string())
+    .min(1, 'At least one image is required'),
 
   price: z
     .number()
@@ -59,36 +64,50 @@ export const insertProductSchema = z.object({
     .default(false),
 
   banner: z
-    .string().pipe(z.url())
+    .string()
+    .pipe(z.url())
     .nullable()
     .optional()
     .default(null),
 });
 
-export const signUpSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(3, 'Name must be at least 3 chars')
-    .max(100),
-
-  password: z
-    .string()
-    .min(8, "Min 8 chars"),
-
-  confirmPassword: z.string(),
-
-  email: z
-    .email('Invalid email')
-    .trim(),
-
-  phone: z.preprocess(
-    emptyStringToNull,
-    z
+export const signUpSchema = z
+  .object({
+    name: z
       .string()
-      .min(7)
-      .max(20)
-      .nullable()
-      .optional(),
-  ),
-})
+      .trim()
+      .min(3, 'Name must be at least 3 chars')
+      .max(100, 'Name is too long'),
+
+    password: z
+      .string()
+      .min(8, 'Min 8 chars')
+      .regex(/[A-Z]/, 'Password must have one capital letter at least')
+      .regex(/[0-9]/, 'Password must have one digit at least'),
+
+    confirmPassword: z
+      .string(),
+
+    email: z
+      .email('Invalid email')
+      .trim()
+      .toLowerCase(),
+
+    phone: z.preprocess(
+      emptyStringToNull,
+      z
+        .string()
+        .min(7)
+        .max(20)
+        .nullable()
+        .optional(),
+    ),
+
+    terms: z.literal("on", { message: 'Terms and Conditions must be accepted' }),
+  })
+
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'The passwords don\'t match',
+    path: ['confirmPassword'],
+  });
+

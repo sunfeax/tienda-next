@@ -8,9 +8,12 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { Checkbox } from "../ui/checkbox";
 import { useRouter } from "next/navigation";
+import { signUpSchema } from "@/lib/validators";
+import { useState } from "react";
 
 export default function CredentialsSignUpForm() {
 
+  const [ error, setError ] = useState<Record<string, string[]>>({});
   const appName = process.env.NEXT_PUBLIC_APP_NAME || "Tienda Next";
   const router = useRouter();
 
@@ -18,27 +21,28 @@ export default function CredentialsSignUpForm() {
 
     evt.preventDefault();
 
-    const formData = new FormData(evt.currentTarget);
+    const raw = Object.fromEntries(new FormData(evt.currentTarget)) as Record<string, string>;
 
-    const name = String(formData.get("name"));
-    const email = String(formData.get("email"));
-    const password = String(formData.get("password"));
-    const confirmedPassword = String(formData.get("password-confirmed"));
-    const phone = String(formData.get("phone"));
+    const payload = {
+      name: raw.name ?? '',
+      email: raw.email ?? '',
+      password: raw.password ?? '',
+      confirmPassword: raw.confirmPassword ?? '',
+      phone: raw.phone ?? '',
+      terms: raw.terms === 'on',
+    };
 
-    if (!name || !email || !password) return;
+    const parsed = signUpSchema.safeParse(payload);
 
-    if (password != confirmedPassword) {
-      alert("Error: the passwords don't match.");
+    if (!parsed.success) {
+      setError(parsed.error.flatten().fieldErrors);
       return;
     }
 
-    await authClient.signUp.email({
-      name,
-      email,
-      password,
-      phone,
-    }, {
+    setError({});
+    const { name, email, password, phone } = parsed.data;
+
+    await authClient.signUp.email(parsed.data, {
       onSuccess: () => {
         console.log("Registro correcto!");
         router.push("/sign-in");
@@ -86,10 +90,10 @@ export default function CredentialsSignUpForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password-confirmed">Confirm password</Label>
+          <Label htmlFor="confirmPassword">Confirm password</Label>
           <Input
-            id="password-confirmed"
-            name="password-confirmed"
+            id="confirmPassword"
+            name="confirmPassword"
             type="password"
             placeholder="********"
             required
@@ -109,6 +113,7 @@ export default function CredentialsSignUpForm() {
         <div className="flex items-center justify-center gap-2">
           <Checkbox
             id="terms"
+            name="terms"
             className="h-5 w-5 border-2 border-slate-400 data-[state=checked]:border-primary"
             required
           />
