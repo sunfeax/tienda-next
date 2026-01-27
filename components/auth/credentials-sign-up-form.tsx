@@ -12,6 +12,7 @@ import { signUpSchema } from "@/lib/validators";
 import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 export default function CredentialsSignUpForm() {
 
@@ -116,6 +117,20 @@ export default function CredentialsSignUpForm() {
             type="text"
             placeholder="34 123 456 789"
           />
+        </div>
+
+        <div>
+          <p className="text-sm mt-2.5 mb-2.5">How to contact with you?</p>
+          <RadioGroup defaultValue="email" name="contactOption" id="contactOption" className="flex gap-10">
+            <div className="inline-flex items-left gap-2">
+              <RadioGroupItem value="email" id="r1"></RadioGroupItem>
+              <Label>Email</Label>
+            </div>
+            <div className="inline-flex items-center gap-2">
+              <RadioGroupItem value="phone" id="r2"></RadioGroupItem>
+              <Label>Phone number</Label>
+            </div>
+          </RadioGroup>
         </div>
 
         <div className="flex items-start gap-2">

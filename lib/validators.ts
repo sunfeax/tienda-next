@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { superRefine, z } from 'zod';
 
 const emptyStringToNull = (val: unknown) => {
   if (typeof val !== 'string') return val;
@@ -71,43 +71,29 @@ export const insertProductSchema = z.object({
     .default(null),
 });
 
-export const signUpSchema = z
-  .object({
-    name: z
-      .string()
-      .trim()
-      .min(3, 'Name must be at least 3 chars')
-      .max(100, 'Name is too long'),
+const baseSignUpSchema = z.object({
+  name: z.string().trim().min(3).max(100),
+  password: z.string().min(8).regex(/[A-Z]/).regex(/[0-9]/),
+  confirmPassword: z.string(),
+  email: z.string().email().trim().toLowerCase(),
+  phone: z.preprocess(emptyStringToNull, z.string().min(7).max(20).nullable().optional()),
+  contactOption: z.enum(['email', 'phone']),
+  terms: z.literal(true),
+});
 
-    password: z
-      .string()
-      .min(8, 'Password must have 8 chars')
-      .regex(/[A-Z]/, 'Password must have one capital letter at least')
-      .regex(/[0-9]/, 'Password must have one digit at least'),
+type SignUpInput = z.infer<typeof baseSignUpSchema>;
 
-    confirmPassword: z
-      .string(),
-
-    email: z
-      .email('Invalid email')
-      .trim()
-      .toLowerCase(),
-
-    phone: z.preprocess(
-      emptyStringToNull,
-      z
-        .string()
-        .min(7)
-        .max(20)
-        .nullable()
-        .optional(),
-    ),
-
-    terms: z.literal(true, { message: 'Terms and Conditions must be accepted' }),
-  })
-
+export const signUpSchema = baseSignUpSchema
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'The passwords don\'t match',
+    message: "The passwords don't match",
     path: ['confirmPassword'],
+  })
+  .superRefine((data: SignUpInput, ctx) => {
+    if (data.contactOption === 'phone' && !data.phone) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['phone'],
+        message: 'Phone number is required when phone contact is selected',
+      });
+    }
   });
-
