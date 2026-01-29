@@ -1,8 +1,8 @@
-import { superRefine, z } from 'zod';
+import { z } from 'zod';
 
-const emptyStringToNull = (val: unknown) => {
-  if (typeof val !== 'string') return val;
-  return val.trim() === '' ? null : val;
+function normalizePhone(phone: string) {
+  if (phone.trim() === '') return null;
+  return phone.replaceAll(' ', '');
 };
 
 export const insertProductSchema = z.object({
@@ -75,10 +75,10 @@ const baseSignUpSchema = z.object({
   name: z.string().trim().min(3).max(100),
   password: z.string().min(8).regex(/[A-Z]/).regex(/[0-9]/),
   confirmPassword: z.string(),
-  email: z.string().email().trim().toLowerCase(),
-  phone: z.preprocess(emptyStringToNull, z.string().min(7).max(20).nullable().optional()),
+  email: z.email().trim().toLowerCase(),
+  phone: z.preprocess(normalizePhone, z.string().min(7).max(20).nullable().optional()),
   contactOption: z.enum(['email', 'phone']),
-  terms: z.literal(true),
+  terms: z.literal(true, 'Read and check the Terms and Conditions'),
 });
 
 type SignUpInput = z.infer<typeof baseSignUpSchema>;
