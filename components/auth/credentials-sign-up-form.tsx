@@ -17,7 +17,6 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 export default function CredentialsSignUpForm() {
 
   const [contactOption, setContactOption] = useState<'email' | 'phone'>('email');
-  const [ error, setError ] = useState<Record<string, string[]>>({});
   const appName = process.env.NEXT_PUBLIC_APP_NAME || "Tienda Next";
   const router = useRouter();
 
@@ -54,7 +53,6 @@ export default function CredentialsSignUpForm() {
       return;
     }
 
-    setError({});
     const { name, email, password, phone } = parsed.data;
 
     await authClient.signUp.email({name, email, password, phone}, {
@@ -157,14 +155,14 @@ export default function CredentialsSignUpForm() {
           </div>
         </div>
 
-        <div className="text-center text-sm text-slate-600">
+        <div className="text-center text-sm text-slate-900">
           Already have an account?
-          <Link href="/sign-in" className="text-slate-900 underline ml-2">
+          <Link href="/sign-in" className="underline ml-2">
             Sign in
           </Link>
         </div>
 
-        <Button type="submit" className="mx-auto block bg-[#1e293b] hover:bg-[#0f172a] text-white px-7">
+        <Button type="submit" className="mx-auto block bg-[#0f172a] hover:bg-[#1e293b] text-white px-7">
           Sign Up
         </Button>
       </form>

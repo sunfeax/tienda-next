@@ -76,16 +76,16 @@ export default function CredentialsSignInForm({ callbackUrl = "/profile" } : { c
           />
         </div>
 
-        <div className="text-center text-sm text-slate-600">
+        <div className="text-center text-sm text-slate-900">
           Don't have an account?
-          <Link href="/sign-up" className="text-slate-900 underline ml-2">
+          <Link href="/sign-up" className="underline ml-2">
             Sign up
           </Link>
         </div>
 
-        <Button
+        <Button 
           type="submit"
-          className="mx-auto block bg-[#1e293b] hover:bg-[#0f172a] text-white px-7"
+          className="mx-auto block bg-[#0f172a] hover:bg-[#1e293b] text-white px-7"
         >
           Sign in
         </Button>
