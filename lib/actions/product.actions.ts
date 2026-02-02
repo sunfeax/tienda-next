@@ -2,6 +2,7 @@
 
 import { prisma } from "@/db/prisma";
 import { Product } from "@/types/product";
+import { convertToPlainObject } from "../utils";
 
 function normalizeProduct(product: any): Product {
   return {
@@ -26,4 +27,34 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   });
 
   return data ? normalizeProduct(data) : null;
+}
+
+export async function getProductsTable({
+  page = 1,
+  pageSize = 2,
+}: {
+  page?: number;
+  pageSize?: number;
+}) {
+  const skip = (page - 1) * pageSize;
+  const [data, totalCount] = await Promise.all([
+    prisma.product.findMany({
+      skip,
+      take: pageSize,
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.product.count(),
+  ]);
+
+  // Считаем общее количество страниц
+  const totalPages = Math.ceil(totalCount / pageSize);
+
+  return {
+    data: convertToPlainObject(data) as unknown as Product[],
+    pageInfo: {
+      totalCount,
+      totalPages,
+      currentPage: page
+    },
+  };
 }
