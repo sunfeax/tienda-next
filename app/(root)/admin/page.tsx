@@ -4,7 +4,11 @@ import { getProductsTable } from "@/lib/actions/product.actions";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
-export default async function AdminPage({ searchParams } : { searchParams: Promise<{callbackUrl?: string}> }) {
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams: { page?: string; pageSize?: string };
+}) {
   const session = await auth.api.getSession({
     headers: await headers(),
   })
@@ -17,13 +21,19 @@ export default async function AdminPage({ searchParams } : { searchParams: Promi
     );
   }
 
-  const { page = 1, pageSize = 2 } = await searchParams;
-  const products = await getProductsTable({page: Number(page), pageSize: Number(pageSize)});
+  const page = Math.max(1, Number(searchParams?.page ?? 1) || 1);
+  const pageSize = Math.max(1, Number(searchParams?.pageSize ?? 2) || 2);
+  const { data, pageInfo } = await getProductsTable({ page, pageSize });
 
   return (
     <div className="flex flex-col gap-5 p-8">
       <h1 className="text-2xl font-bold">Admin Page</h1>
-      <ProductTable products={data} page={page.currentPage} totalPages={pageInfo.totalPages}/>
+      <ProductTable
+        products={data}
+        currentPage={pageInfo.currentPage}
+        totalPages={pageInfo.totalPages}
+        pageSize={pageSize}
+      />
       <SignOutButton />
     </div>
   );
