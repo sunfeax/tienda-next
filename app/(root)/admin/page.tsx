@@ -1,8 +1,9 @@
 import ProductTable from "@/components/admin/product-table";
-import SignOutButton from "@/components/auth/signout-button";
+import { Button } from "@/components/ui/button";
 import { getProductsTable } from "@/lib/actions/product.actions";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import Link from "next/link";
 
 export default async function AdminPage({
   searchParams,
@@ -27,14 +28,22 @@ export default async function AdminPage({
 
   return (
     <div className="flex flex-col gap-5 p-8">
-      <h1 className="text-2xl font-bold">Admin Page</h1>
+      <div>
+        <h1 className="text-2xl font-bold">Admin Page</h1>
+        <div>
+          {/* Plus icon */}
+          <Button asChild>
+            <Link href={'/admin/create'}></Link>
+            Create product
+          </Button>
+        </div>
+      </div>
       <ProductTable
         products={data}
         currentPage={pageInfo.currentPage}
         totalPages={pageInfo.totalPages}
         pageSize={pageSize}
       />
-      <SignOutButton />
     </div>
   );
 }

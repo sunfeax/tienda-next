@@ -46,7 +46,6 @@ export async function getProductsTable({
     prisma.product.count(),
   ]);
 
-  // Считаем общее количество страниц
   const totalPages = Math.ceil(totalCount / pageSize);
 
   return {
@@ -56,5 +55,12 @@ export async function getProductsTable({
       totalPages,
       currentPage: page
     },
+  };
+}
+
+export async function actionTest(formData: FormData) {
+  const rawFormData = {
+    name: formData.get("name"),
+    slug: formData.get("slug"),
   };
 }
