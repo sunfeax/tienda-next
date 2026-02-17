@@ -72,13 +72,13 @@ export const insertProductSchema = z.object({
 });
 
 const baseSignUpSchema = z.object({
-  name: z.string().trim().min(3).max(100),
-  password: z.string().min(8).regex(/[A-Z]/).regex(/[0-9]/),
+  name: z.string().trim().min(3, 'Name must contain at least 3 chars').max(100, 'Name too long'),
+  password: z.string().min(8, 'Password must contain at least 8 chars').regex(/[A-Z]/, 'Password must contain one uppercase letter').regex(/[0-9]/, 'Password must contain one capital letter'),
   confirmPassword: z.string(),
   email: z.email().trim().toLowerCase(),
-  phone: z.preprocess(normalizePhone, z.string().min(7).max(20).nullable().optional()),
+  phone: z.preprocess(normalizePhone, z.string().min(7, 'Phone must contain at least 7 digits').max(20, 'Phone number too long').nullable().optional()),
   contactOption: z.enum(['email', 'phone']),
-  terms: z.literal(true, 'Read and check the Terms and Conditions'),
+  terms: z.literal(true, 'Read Terms and Conditions and tick the box'),
 });
 
 type SignUpInput = z.infer<typeof baseSignUpSchema>;

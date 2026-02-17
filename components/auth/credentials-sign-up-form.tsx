@@ -39,17 +39,11 @@ export default function CredentialsSignUpForm() {
     const parsed = signUpSchema.safeParse(payload);
 
     if (!parsed.success) {
-      const { fieldErrors, formErrors } = z.flattenError(parsed.error);
-      const messages = [
-        ...formErrors,
-        ...Object.values(fieldErrors).flat(),
-      ].filter(Boolean);
+      const { fieldErrors } = z.flattenError(parsed.error);
 
-      toast.error("", {
-        description: messages.join("\n"),
-        descriptionClassName: "whitespace-pre-line",
-      });
+      console.log(fieldErrors);
 
+      toast.error("Registration failed!");
       return;
     }
 
@@ -68,7 +62,7 @@ export default function CredentialsSignUpForm() {
 
   return (
     <div className="flex flex-col items-center justify-center p-6 bg-white rounded-lg max-w-md mx-auto">
-      <form onSubmit={handleSubmit} className="w-full space-y-4">
+      <form onSubmit={handleSubmit} className="w-full space-y-4 flex flex-col gap-3">
         <div className="space-y-2">
           <Label htmlFor="name">Username</Label>
           <Input

@@ -8,6 +8,7 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { cn } from "@/lib/utils";
+import { actionTest } from "@/lib/actions/product.actions";
 
 export default function ProductForm() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function ProductForm() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form action="actionTest" className="space-y-4">
+          <form action={actionTest} className="space-y-4">
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Label>Name</Label>

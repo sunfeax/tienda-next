@@ -15,7 +15,7 @@ export default function ProductDetailPage({ product }: { product: Product }) {
     <div className="flex gap-20 items-start">
       <div className="flex flex-col">
         <Image
-          className="w-full max-w-xs rounded-2xl mb-4"
+          className="w-full max-w-xs rounded-2xl mb-4 border-2"
           src={selectedImage}
           alt={product.name}
           width={300} height={300}
@@ -28,7 +28,7 @@ export default function ProductDetailPage({ product }: { product: Product }) {
               alt={`${product.name} thumbnail`}
               width={80}
               height={80}
-              className="cursor-pointer rounded-lg object-cover"
+              className="cursor-pointer rounded-lg object-cover border-2"
               onClick={() => setSelectedImage(img)}
             />
           ))}
