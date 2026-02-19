@@ -73,7 +73,7 @@ export const insertProductSchema = z.object({
 
 const baseSignUpSchema = z.object({
   name: z.string().trim().min(3, 'Name must contain at least 3 chars').max(100, 'Name too long'),
-  password: z.string().min(8, 'Password must contain at least 8 chars').regex(/[A-Z]/, 'Password must contain one uppercase letter').regex(/[0-9]/, 'Password must contain one capital letter'),
+  password: z.string().min(8, 'Password must contain at least 8 chars').regex(/[A-Z]/, 'Password must contain one capital letter').regex(/[0-9]/, 'Password must contain one digit'),
   confirmPassword: z.string(),
   email: z.email().trim().toLowerCase(),
   phone: z.preprocess(normalizePhone, z.string().min(7, 'Phone must contain at least 7 digits').max(20, 'Phone number too long').nullable().optional()),

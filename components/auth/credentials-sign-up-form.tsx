@@ -14,15 +14,21 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
+type SignUpFieldErrors = Partial<Record<keyof z.infer<typeof signUpSchema>, string[]>>;
+
 export default function CredentialsSignUpForm() {
 
   const [contactOption, setContactOption] = useState<'email' | 'phone'>('email');
+  const [fieldErrors, setFieldErrors] = useState<SignUpFieldErrors>({});
   const appName = process.env.NEXT_PUBLIC_APP_NAME || "Tienda Next";
   const router = useRouter();
+
+  const getFieldError = (field: keyof SignUpFieldErrors) => fieldErrors[field]?.[0];
 
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
 
     evt.preventDefault();
+    setFieldErrors({});
 
     const raw = Object.fromEntries(new FormData(evt.currentTarget)) as Record<string, string>;
 
@@ -39,23 +45,24 @@ export default function CredentialsSignUpForm() {
     const parsed = signUpSchema.safeParse(payload);
 
     if (!parsed.success) {
-      const { fieldErrors } = z.flattenError(parsed.error);
-
-      console.log(fieldErrors);
-
-      toast.error("Registration failed!");
+      const { fieldErrors: zodFieldErrors } = z.flattenError(parsed.error);
+      setFieldErrors(zodFieldErrors as SignUpFieldErrors);
+      toast.error("Registration failed");
       return;
     }
 
-    const { name, email, password, phone } = parsed.data;
+    const { name, email, password, phone, contactOption } = parsed.data;
 
-    await authClient.signUp.email({name, email, password, phone}, {
+    await authClient.signUp.email({ name, email, password, phone, comms: contactOption }, {
       onSuccess: () => {
         toast.success("Registration was successful!");
         router.push("/sign-in");
       },
       onError: (ctx) => {
-        toast.error(ctx.error.message);
+        if (ctx.error.message === "User already exists. Use another email.") {
+          setFieldErrors({ email: [ctx.error.message] });
+        }
+        toast.error("Registration failed");
       }
     });
   }
@@ -70,6 +77,9 @@ export default function CredentialsSignUpForm() {
             name="name"
             defaultValue={signUpDeafaultValues.name}
           />
+          {getFieldError("name") && (
+            <p className="text-sm text-destructive">{getFieldError("name")}</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -81,6 +91,9 @@ export default function CredentialsSignUpForm() {
             placeholder="juan@example.com"
             defaultValue={signUpDeafaultValues.email}
           />
+          {getFieldError("email") && (
+            <p className="text-sm text-destructive">{getFieldError("email")}</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -91,6 +104,9 @@ export default function CredentialsSignUpForm() {
             type="password"
             placeholder="********"
           />
+          {getFieldError("password") && (
+            <p className="text-sm text-destructive">{getFieldError("password")}</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -101,6 +117,9 @@ export default function CredentialsSignUpForm() {
             type="password"
             placeholder="********"
           />
+          {getFieldError("confirmPassword") && (
+            <p className="text-sm text-destructive">{getFieldError("confirmPassword")}</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -111,6 +130,9 @@ export default function CredentialsSignUpForm() {
             type="text"
             placeholder="34 123 456 789"
           />
+          {getFieldError("phone") && (
+            <p className="text-sm text-destructive">{getFieldError("phone")}</p>
+          )}
         </div>
 
         <div>
@@ -119,7 +141,7 @@ export default function CredentialsSignUpForm() {
             defaultValue="email"
             name="contactOption"
             value={contactOption}
-            onValueChange={(val) => setContactOption(val as 'email')}
+            onValueChange={(val) => setContactOption(val as 'email' | 'phone')}
             className="flex gap-10">
             <div className="inline-flex items-left gap-2">
               <RadioGroupItem value="email" id="r1"></RadioGroupItem>
@@ -130,6 +152,9 @@ export default function CredentialsSignUpForm() {
               <Label>Phone number</Label>
             </div>
           </RadioGroup>
+          {getFieldError("contactOption") && (
+            <p className="text-sm text-destructive mt-2">{getFieldError("contactOption")}</p>
+          )}
         </div>
 
         <div className="flex items-start gap-2">
@@ -148,6 +173,9 @@ export default function CredentialsSignUpForm() {
             </p>
           </div>
         </div>
+        {getFieldError("terms") && (
+          <p className="text-sm text-destructive">{getFieldError("terms")}</p>
+        )}
 
         <div className="text-center text-sm text-slate-900">
           Already have an account?

@@ -16,6 +16,12 @@ export const auth = betterAuth({
         required: false,
         input: true
       },
+      comms: {
+        type: "string",
+        required: true,
+        defaultValue: "email",
+        input: true
+      },
       role: {
         type: "string",
         required: true,
