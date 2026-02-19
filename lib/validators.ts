@@ -97,3 +97,26 @@ export const signUpSchema = baseSignUpSchema
       });
     }
   });
+
+const baseAdminUpdateUserSchema = z.object({
+  id: z.string().trim().min(1, 'User id is required'),
+  name: z.string().trim().min(3, 'Name must contain at least 3 chars').max(100, 'Name too long'),
+  phone: z.preprocess(
+    normalizePhone,
+    z.string().min(7, 'Phone must contain at least 7 digits').max(20, 'Phone number too long').nullable().optional(),
+  ),
+  role: z.enum(['user', 'admin']),
+  comms: z.enum(['email', 'phone']),
+});
+
+type AdminUpdateUserInput = z.infer<typeof baseAdminUpdateUserSchema>;
+
+export const adminUpdateUserSchema = baseAdminUpdateUserSchema.superRefine((data: AdminUpdateUserInput, ctx) => {
+  if (data.comms === 'phone' && !data.phone) {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['phone'],
+      message: 'Phone number is required when phone communication is selected',
+    });
+  }
+});
